@@ -134,16 +134,17 @@ shinyUI(navbarPage(
     tabPanel("交易结果",
              sidebarLayout(
                  sidebarPanel(
+                     width=2,
                      h3("交易结果"),
                      p("交易后的情况如右边的图表所示。")
                  ),
                  mainPanel(
                      h4('每轮的交易情况为：'),
-                     tableOutput("e_df"),
+                     DT::dataTableOutput('e_df'),
                      h4('发电企业的交易结算如下：'),
-                     tableOutput("e_producers"),
+                     DT::dataTableOutput('e_producers'),
                      h4('电力用户的交易结算如下：'),
-                     tableOutput("e_users")
+                     DT::dataTableOutput('e_users')
                  )
              )
     ),
@@ -151,6 +152,7 @@ shinyUI(navbarPage(
     tabPanel("可视化",
              sidebarLayout(
                  sidebarPanel(
+                     width=2,
                      h3("交易及结算可视化"),
                      p("交易与结算结果的可视化如右边的图表所示。")
                  ),

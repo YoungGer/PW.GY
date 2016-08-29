@@ -94,7 +94,7 @@ main_trading = function(producers, users, deal_ratio_proc=0.8){
 
 output_table <- function(data) {
     # colnames(data) = col_names
-    options_table <- list(dom = 't', paging = FALSE, ordering = FALSE)
+    options_table <- list(dom = 't', paging = FALSE, ordering = TRUE)
     table <- DT::renderDataTable(
         data, escape = FALSE, selection = 'none', server = FALSE,
         options = options_table
@@ -106,6 +106,7 @@ output_table <- function(data) {
 
 
 shinyServer(function(input, output, session) {
+    # 数据Reactive----------------------------------------------------------------------
     # 数据初始化，读入输入数据
     producers_init_reac = reactive({
         producers_init = format_data(input$pt_name,input$pt_amount,input$pt_price)
@@ -165,38 +166,23 @@ shinyServer(function(input, output, session) {
     })
 
 
-    pu_table_cols = c('名称','申报量','申报价')
     observeEvent(producers_init_reac(),
                  {
-                     output$p_table = output_table(producers_init_reac())
+                     data = producers_init_reac()[c('name','amount','price')]
+                     colnames(data) = c('名称','申报量','申报价')
+                     output$p_table = output_table(data)
                  }
     )
     observeEvent(users_init_reac(),
                  {
-                     output$u_table = output_table(users_init_reac())
+                     data = users_init_reac()[c('name','amount','price')]
+                     colnames(data) = c('名称','申报量','申报价')
+                     output$u_table = output_table(data)
                  }
     )
 
 
 
-    # tab 交易
-    output$e_producers = renderTable({
-        producers_accounts = e_producers_reac()
-        colnames(producers_accounts) = c('名称', '申报价差', '申报电量', '剩余电量', '中标电量', '累计电费(不含返还)', '累计电费占比',
-                                         '累计价差电费', '返还电费', '中标电费(含返还)', '中标价差')
-        producers_accounts
-    })
-    output$e_users = renderTable({
-        users_accounts = e_users_reac()
-        colnames(users_accounts) = c('名称', '申报价差', '申报电量', '剩余电量', '中标电量', '累计电费(不含返还)', '累计电费占比',
-                                     '累计价差电费', '返还电费', '中标电费(含返还)', '中标价差')
-        users_accounts
-    })
-    output$e_df = renderTable({
-        df_accounts = e_df_reac()
-        colnames(df_accounts) = c('发电用户','发电申报量','发电申报价','用电用户','用电申报量','用电申报价','价差','成交电量')
-        df_accounts
-    })
 
 
 
@@ -204,6 +190,12 @@ shinyServer(function(input, output, session) {
     ## plot_df
     observeEvent(e_df_reac(),
                  {
+                     #table
+                     data_t = e_df_reac()
+                     colnames(data_t) = c('发电用户','发电申报量','发电申报价','用电用户','用电申报量','用电申报价','价差','成交电量')
+                     output$e_df= output_table(data_t)
+
+                     #plot
                      data = e_df_reac()[c('P_price','U_price','price_diff')]
                      colnames(data) = c('卖电价格','买电价格','价格差')
                      renderLineChart(div_id = "plot_df",data = data,step = "end",show.legend = TRUE)
@@ -215,8 +207,18 @@ shinyServer(function(input, output, session) {
 
                  }
     )
+
+
+
     observeEvent(e_producers_reac(),
                  {
+                     #table
+                     data_t = e_producers_reac()
+                     colnames(data_t) = c('名称', '申报价差', '申报电量', '剩余电量', '中标电量', '累计电费(不含返还)', '累计电费占比',
+                                          '累计价差电费', '返还电费', '中标电费(含返还)', '中标价差')
+                     output$e_producers= output_table(data_t)
+
+                     #plot
                      data = e_producers_reac()[c('name','amount_deal')]
                      colnames(data) = c('name','value')
                      renderPieChart(div_id = "plot_prod1",data = data,radius = "70%",center_x = "50%", center_y = "50%")
@@ -229,6 +231,13 @@ shinyServer(function(input, output, session) {
     )
     observeEvent(e_users_reac(),
                  {
+                     #table
+                     data_t = e_users_reac()
+                     colnames(data_t) = c('名称', '申报价差', '申报电量', '剩余电量', '中标电量', '累计电费(不含返还)', '累计电费占比',
+                                                  '累计价差电费', '返还电费', '中标电费(含返还)', '中标价差')
+                     output$e_users= output_table(data_t)
+
+                     #plot
                      data = e_users_reac()[c('name','amount_deal')]
                      colnames(data) = c('name','value')
                      renderPieChart(div_id = "plot_user1",data = data,radius = "70%",center_x = "50%", center_y = "50%")
