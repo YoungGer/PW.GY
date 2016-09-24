@@ -142,8 +142,14 @@ shinyUI(navbarPage(
                      h4('每轮的交易情况为：'),
                      DT::dataTableOutput('e_df'),
                      h4('发电企业的交易结算如下：'),
+                     textOutput("p_deal_max"),
+                     textOutput("p_deal_min"),
+                     textOutput("p_deal_mean"),
                      DT::dataTableOutput('e_producers'),
                      h4('电力用户的交易结算如下：'),
+                     textOutput("u_deal_max"),
+                     textOutput("u_deal_min"),
+                     textOutput("u_deal_mean"),
                      DT::dataTableOutput('e_users')
                  )
              )

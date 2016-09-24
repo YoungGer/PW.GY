@@ -1,8 +1,8 @@
 name: pwshinyio
 account: younggy
 server: shinyapps.io
-bundleId: 543245
+bundleId: 566054
 url: https://younggy.shinyapps.io/pwshinyio/
-when: 1472458865.5662
+when: 1474621731.01779
 asMultiple: FALSE
 asStatic: FALSE

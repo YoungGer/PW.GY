@@ -165,6 +165,37 @@ shinyServer(function(input, output, session) {
         paste(mean(as.numeric((strsplit(input$ut_price,split=','))[[1]])),'厘/千瓦时')
     })
 
+    output$p_deal_max = renderText({
+        producers_accounts = e_producers_reac()
+        d = max(producers_accounts[,ncol(producers_accounts)])
+        paste('成交最高价为',d,'厘/千瓦时')
+    })
+    output$p_deal_min = renderText({
+        producers_accounts = e_producers_reac()
+        d = min(producers_accounts[,ncol(producers_accounts)])
+        paste('成交最低价为',d,'厘/千瓦时')
+    })
+    output$p_deal_mean = renderText({
+        producers_accounts = e_producers_reac()
+        d = mean(producers_accounts[,ncol(producers_accounts)])
+        paste('成交平均价为',d,'厘/千瓦时')
+    })
+    output$u_deal_max = renderText({
+        users_accounts = e_users_reac()
+        d = max(users_accounts[,ncol(users_accounts)])
+        paste('成交最高价为',d,'厘/千瓦时')
+    })
+    output$u_deal_min = renderText({
+        users_accounts = e_users_reac()
+        d = min(users_accounts[,ncol(users_accounts)])
+        paste('成交最低价为',d,'厘/千瓦时')
+    })
+    output$u_deal_mean = renderText({
+        users_accounts = e_users_reac()
+        d = mean(users_accounts[,ncol(users_accounts)])
+        paste('成交平均价为',d,'厘/千瓦时')
+    })
+
 
     observeEvent(producers_init_reac(),
                  {
